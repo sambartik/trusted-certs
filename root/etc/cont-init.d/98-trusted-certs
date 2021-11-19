@@ -1,0 +1,46 @@
+#!/usr/bin/with-contenv bash
+
+local_certs_dir="/usr/share/ca-certificates"
+certs_dir="/config/trusted-certs"
+certs_conf="/etc/ca-certificates.conf"
+
+echo "**** Trusted certs: Start ****"
+
+
+echo "**** Installing dependencies ****"
+apt-get update > /dev/null && apt-get install -y --no-install-recommends \
+    ca-certificates > /dev/null
+
+if [[ ! -d $certs_dir ]]; then
+
+        echo "**** Creating default trusted-certs directory ****"
+        mkdir -p $certs_dir
+fi
+
+certs="$certs_dir/*.crt"
+changed=false
+for file in $certs; do
+        [[ -e $file ]] || continue;
+        filename=$(basename $file);
+
+        if ! grep -q $filename $certs_conf; then
+                echo "**** Detected new certificate to be trusted: $filename ****"
+
+                echo "**** Copying the file to local ca store... ****"
+                cp $file $local_certs_dir
+
+                echo "**** Adding a new entry to $certs_dir... ****"
+                echo $filename >> $certs_conf
+
+                changed=true
+        fi
+done
+
+if [[ $changed = true ]]; then
+        echo "**** Updating the ca certificates...  ****"
+        update-ca-certificates
+fi
+
+echo "**** Trusted certs: exit. ****"
+
+exit 0
