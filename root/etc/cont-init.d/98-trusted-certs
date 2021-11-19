@@ -26,10 +26,10 @@ for file in $certs; do
         if ! grep -q $filename $certs_conf; then
                 echo "**** Detected new certificate to be trusted: $filename ****"
 
-                echo "**** Copying the file to local ca store... ****"
+                echo "**** Copying the file to $certs_dir... ****"
                 cp $file $local_certs_dir
 
-                echo "**** Adding a new entry to $certs_dir... ****"
+                echo "**** Adding a new entry to $certs_conf... ****"
                 echo $filename >> $certs_conf
 
                 changed=true
