@@ -5,14 +5,7 @@ certs_dir="/config/trusted-certs"
 certs_conf="/etc/ca-certificates.conf"
 
 echo "**** Trusted certs: Start ****"
-
-
-echo "**** Installing dependencies ****"
-apt-get update > /dev/null && apt-get install -y --no-install-recommends \
-    ca-certificates > /dev/null
-
 if [[ ! -d $certs_dir ]]; then
-
         echo "**** Creating default trusted-certs directory ****"
         mkdir -p $certs_dir
 fi
@@ -42,5 +35,4 @@ if [[ $changed = true ]]; then
 fi
 
 echo "**** Trusted certs: exit. ****"
-
 exit 0
