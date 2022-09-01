@@ -5,7 +5,7 @@ on: [push, pull_request, workflow_dispatch]
 env:
   GH_ENDPOINT: "sambartik/trusted-certs"
   DH_ENDPOINT: "samuelbartik/trusted-certs"
-  BRANCH: "master"
+  BRANCH: "testing"
 
 jobs:
   build:
@@ -19,9 +19,9 @@ jobs:
       - name: Tag image
         if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) }}
         run: |
-          docker tag ${{ github.sha }} ${DH_ENDPOINT}:latest
+          docker tag ${{ github.sha }} ${DH_ENDPOINT}:testing
           docker tag ${{ github.sha }} ${DH_ENDPOINT}:${{ github.sha }}
-          docker tag ${{ github.sha }} ghcr.io/${GH_ENDPOINT}:latest
+          docker tag ${{ github.sha }} ghcr.io/${GH_ENDPOINT}:testing
           docker tag ${{ github.sha }} ghcr.io/${GH_ENDPOINT}:${{ github.sha }}
       - name: Credential check
         if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) }}
@@ -44,7 +44,7 @@ jobs:
         if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) && env.CR_USER && env.CR_PAT }}
         run: |
           docker push ghcr.io/${GH_ENDPOINT}:${{ github.sha }}
-          docker push ghcr.io/${GH_ENDPOINT}:latest
+          docker push ghcr.io/${GH_ENDPOINT}:testing
       - name: Login to DockerHub
         if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) && env.DOCKERUSER && env.DOCKERPASS }}
         run: |
@@ -53,4 +53,4 @@ jobs:
         if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) && env.DOCKERUSER && env.DOCKERPASS }}
         run: |
           docker push ${DH_ENDPOINT}:${{ github.sha }}
-          docker push ${DH_ENDPOINT}:latest
+          docker push ${DH_ENDPOINT}:testing
