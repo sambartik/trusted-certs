@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bash
+#!/command/with-contenv bash
 
 local_certs_dir="/usr/share/ca-certificates"
 certs_dir="/config/trusted-certs"
